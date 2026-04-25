@@ -19,11 +19,12 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         _tenantService = tenantService;
     }
 
-    public DbSet<Hostel> Hostels => Set<Hostel>();
-    public DbSet<Room> Rooms => Set<Room>();
-    public DbSet<Bed> Beds => Set<Bed>();
-    public DbSet<Booking> Bookings => Set<Booking>();
-    public DbSet<Payment> Payments => Set<Payment>();
+    public DbSet<Hostel> Hostels { get; set; }
+    public DbSet<Room> Rooms { get; set; }
+    public DbSet<Bed> Beds { get; set; }
+    public DbSet<Booking> Bookings { get; set; }
+    public DbSet<Payment> Payments { get; set; }
+    public DbSet<Guest> Guests { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

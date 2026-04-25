@@ -8,7 +8,8 @@ public class Booking : BaseEntity, IMustHaveTenant
     public Guid BedId { get; set; }
     public Bed Bed { get; set; } = null!;
     
-    public Guid GuestId { get; set; } // Reference to User/Guest table later
+    public Guid GuestId { get; set; }
+    public Guest Guest { get; set; } = null!;
     
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }

@@ -55,6 +55,12 @@ public class OnboardHostelCommandHandler : IRequestHandler<OnboardHostelCommand,
             TenantId = newTenantId
         };
 
+        // Add beds to private room
+        for (int i = 1; i <= 2; i++)
+        {
+            privateRoom.Beds.Add(new Bed { Name = $"P{i}", Status = BedStatus.Available, TenantId = newTenantId });
+        }
+
         var dormRoom = new Room
         {
             Hostel = hostel,
@@ -63,6 +69,12 @@ public class OnboardHostelCommandHandler : IRequestHandler<OnboardHostelCommand,
             MaxCapacity = 8,
             TenantId = newTenantId
         };
+
+        // Add beds to dorm room
+        for (int i = 1; i <= 8; i++)
+        {
+            dormRoom.Beds.Add(new Bed { Name = $"D{i}", Status = BedStatus.Available, TenantId = newTenantId });
+        }
         
         hostel.Rooms.Add(privateRoom);
         hostel.Rooms.Add(dormRoom);
