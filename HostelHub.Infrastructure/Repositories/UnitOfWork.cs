@@ -12,6 +12,7 @@ public class UnitOfWork : IUnitOfWork
     private IRepository<Bed>? _beds;
     private IRepository<Booking>? _bookings;
     private IRepository<Payment>? _payments;
+    private IRepository<Guest>? _guests;
 
     public UnitOfWork(ApplicationDbContext context)
     {
@@ -23,6 +24,7 @@ public class UnitOfWork : IUnitOfWork
     public IRepository<Bed> Beds => _beds ??= new Repository<Bed>(_context);
     public IRepository<Booking> Bookings => _bookings ??= new Repository<Booking>(_context);
     public IRepository<Payment> Payments => _payments ??= new Repository<Payment>(_context);
+    public IRepository<Guest> Guests => _guests ??= new Repository<Guest>(_context);
 
     public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {

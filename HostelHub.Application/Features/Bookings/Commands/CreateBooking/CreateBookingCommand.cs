@@ -11,7 +11,8 @@ public record CreateBookingCommand(
     Guid BedId,
     DateTime StartDate,
     DateTime EndDate,
-    Guid GuestId) : IRequest<Guid>;
+    string GuestFullName,
+    string GuestEmail) : IRequest<Guid>;
 
 public class CreateBookingCommandHandler : IRequestHandler<CreateBookingCommand, Guid>
 {
@@ -50,22 +51,32 @@ public class CreateBookingCommandHandler : IRequestHandler<CreateBookingCommand,
             throw new InvalidOperationException("Bed is no longer available for these dates.");
         }
 
-        // 3. Create Booking
+        // 3. Manage Guest Profile (CRM Linkage)
+        var guests = await _unitOfWork.Guests.GetAllAsync(cancellationToken);
+        var guest = guests.FirstOrDefault(g => g.Email.Equals(request.GuestEmail, StringComparison.OrdinalIgnoreCase));
+
+        if (guest == null)
+        {
+            guest = new Guest
+            {
+                FullName = request.GuestFullName,
+                Email = request.GuestEmail,
+                TenantId = tenantId
+            };
+            await _unitOfWork.Guests.AddAsync(guest, cancellationToken);
+        }
+
+        // 4. Create Booking
         var booking = new Booking
         {
             BedId = request.BedId,
-            GuestId = request.GuestId,
+            Guest = guest,
             StartDate = request.StartDate,
             EndDate = request.EndDate,
             Status = BookingStatus.Confirmed,
             TenantId = tenantId
         };
 
-        // We mark the bed as updated to trigger the RowVersion check if someone else is editing the bed record
-        // though usually, the existence of the Booking record is the "locking" mechanism in our availability query.
-        // To be safe, we can update the bed status or just a dummy property if necessary.
-        // But the primary protection is the availability query check which checks the Bookings table.
-        
         await _unitOfWork.Bookings.AddAsync(booking, cancellationToken);
 
         try
@@ -86,7 +97,8 @@ public class CreateBookingCommandValidator : AbstractValidator<CreateBookingComm
     public CreateBookingCommandValidator()
     {
         RuleFor(x => x.BedId).NotEmpty();
-        RuleFor(x => x.GuestId).NotEmpty();
+        RuleFor(x => x.GuestFullName).NotEmpty();
+        RuleFor(x => x.GuestEmail).NotEmpty().EmailAddress();
         RuleFor(x => x.StartDate).NotEmpty().LessThan(x => x.EndDate);
         RuleFor(x => x.EndDate).NotEmpty().GreaterThan(x => x.StartDate);
         RuleFor(x => x.StartDate).GreaterThanOrEqualTo(DateTime.Today).WithMessage("Start date cannot be in the past");

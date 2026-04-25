@@ -9,5 +9,6 @@ public interface IUnitOfWork
     IRepository<Bed> Beds { get; }
     IRepository<Booking> Bookings { get; }
     IRepository<Payment> Payments { get; }
+    IRepository<Guest> Guests { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }
