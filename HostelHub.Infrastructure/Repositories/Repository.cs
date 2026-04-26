@@ -15,6 +15,8 @@ public class Repository<T> : IRepository<T> where T : BaseEntity
         _context = context;
     }
 
+    public IQueryable<T> Entities => _context.Set<T>();
+
     public async Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         return await _context.Set<T>().FindAsync(new object[] { id }, cancellationToken);

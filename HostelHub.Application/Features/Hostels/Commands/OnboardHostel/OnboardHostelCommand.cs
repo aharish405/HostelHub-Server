@@ -40,7 +40,7 @@ public class OnboardHostelCommandHandler : IRequestHandler<OnboardHostelCommand,
         var hostel = new Hostel
         {
             Name = request.Name,
-            Address = request.Address,
+            Street = request.Address, // Legacy fallback
             Capacity = request.Capacity,
             TenantId = newTenantId
         };
@@ -58,14 +58,14 @@ public class OnboardHostelCommandHandler : IRequestHandler<OnboardHostelCommand,
         // Add beds to private room
         for (int i = 1; i <= 2; i++)
         {
-            privateRoom.Beds.Add(new Bed { BedNumber = $"P{i}", Status = BedStatus.Available, TenantId = newTenantId });
+            privateRoom.Beds.Add(new Bed { BedName = $"P{i}", Status = BedStatus.Available, PricePerNight = 50.0m, TenantId = newTenantId });
         }
 
         var dormRoom = new Room
         {
             Hostel = hostel,
             RoomNumber = "DRM-01",
-            RoomType = RoomType.Dormitory,
+            RoomType = RoomType.MixedDorm,
             MaxCapacity = 8,
             TenantId = newTenantId
         };
@@ -73,7 +73,7 @@ public class OnboardHostelCommandHandler : IRequestHandler<OnboardHostelCommand,
         // Add beds to dorm room
         for (int i = 1; i <= 8; i++)
         {
-            dormRoom.Beds.Add(new Bed { BedNumber = $"D{i}", Status = BedStatus.Available, TenantId = newTenantId });
+            dormRoom.Beds.Add(new Bed { BedName = $"D{i}", Status = BedStatus.Available, PricePerNight = 25.0m, TenantId = newTenantId });
         }
         
         hostel.Rooms.Add(privateRoom);

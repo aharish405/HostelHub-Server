@@ -26,6 +26,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Payment> Payments { get; set; }
     public DbSet<Guest> Guests { get; set; }
 
+    private string? CurrentTenantId => _tenantService.GetTenantId();
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
@@ -33,13 +35,14 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
         // Apply Global Query Filter for Multi-tenancy
-        var tenantId = _tenantService.GetTenantId();
-        
-        builder.Entity<Hostel>().HasQueryFilter(e => e.TenantId == tenantId);
-        builder.Entity<Room>().HasQueryFilter(e => e.TenantId == tenantId);
-        builder.Entity<Bed>().HasQueryFilter(e => e.TenantId == tenantId);
-        builder.Entity<Booking>().HasQueryFilter(e => e.TenantId == tenantId);
-        builder.Entity<Payment>().HasQueryFilter(e => e.TenantId == tenantId);
+        // IMPORTANT: EF Core captures this expression. We must reference the property/field 
+        // of the context so it evaluates correctly at execution time.
+        builder.Entity<Hostel>().HasQueryFilter(e => e.TenantId == CurrentTenantId);
+        builder.Entity<Room>().HasQueryFilter(e => e.TenantId == CurrentTenantId);
+        builder.Entity<Bed>().HasQueryFilter(e => e.TenantId == CurrentTenantId);
+        builder.Entity<Booking>().HasQueryFilter(e => e.TenantId == CurrentTenantId);
+        builder.Entity<Payment>().HasQueryFilter(e => e.TenantId == CurrentTenantId);
+        builder.Entity<Guest>().HasQueryFilter(e => e.TenantId == CurrentTenantId);
     }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

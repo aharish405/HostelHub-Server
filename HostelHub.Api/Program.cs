@@ -4,6 +4,7 @@ using HostelHub.Application;
 using HostelHub.Infrastructure;
 using HostelHub.Infrastructure.Identity;
 using HostelHub.Infrastructure.Persistence;
+using HostelHub.Api.Hubs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -32,6 +33,7 @@ builder.Host.UseSerilog((context, configuration) =>
 // Add services
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddSignalR();
 
 // Add Identity
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
@@ -105,16 +107,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// app.UseHttpsRedirection();
-
 app.UseCors("AllowFrontend");
-
 app.UseSerilogRequestLogging();
-
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<OccupancyHub>("/hubs/occupancy");
 
 // Seed Database
 await DatabaseSeeder.SeedAsync(app.Services);

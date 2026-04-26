@@ -9,7 +9,8 @@ public class Bed : BaseEntity, IMustHaveTenant
     public Guid RoomId { get; set; }
     public Room Room { get; set; } = null!;
     
-    public string BedNumber { get; set; } = string.Empty;
+    public string BedName { get; set; } = string.Empty;
+    public BedType BedType { get; set; }
     public BedStatus Status { get; set; }
     public decimal PricePerNight { get; set; }
     

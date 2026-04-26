@@ -30,9 +30,9 @@ public class BookingIsolationTests(IntegrationTestFactory factory) : BaseIntegra
         await roleManager.CreateAsync(new IdentityRole(Roles.HostelAdmin));
 
         // Create Hostel A
-        var hostelA = new Hostel { Name = "Hostel A", Address = "Address A", TenantId = "tenant-a" };
-        var roomA = new Room { Hostel = hostelA, RoomNumber = "A1", RoomType = RoomType.Dormitory, TenantId = "tenant-a" };
-        var bedA = new Bed { Room = roomA, BedNumber = "B1", Status = BedStatus.Available, PricePerNight = 10, TenantId = "tenant-a" };
+        var hostelA = new Hostel { Name = "Hostel A", Street = "Address A", TenantId = "tenant-a" };
+        var roomA = new Room { Hostel = hostelA, RoomNumber = "A1", RoomType = RoomType.MixedDorm, TenantId = "tenant-a" };
+        var bedA = new Bed { Room = roomA, BedName = "B1", Status = BedStatus.Available, PricePerNight = 10, TenantId = "tenant-a" };
         context.Hostels.Add(hostelA);
         await context.SaveChangesAsync();
 
@@ -56,7 +56,7 @@ public class BookingIsolationTests(IntegrationTestFactory factory) : BaseIntegra
         await context.SaveChangesAsync();
 
         // Create Admin B
-        var hostelB = new Hostel { Name = "Hostel B", Address = "Address B", TenantId = "tenant-b" };
+        var hostelB = new Hostel { Name = "Hostel B", Street = "Address B", TenantId = "tenant-b" };
         context.Hostels.Add(hostelB);
         await context.SaveChangesAsync();
         

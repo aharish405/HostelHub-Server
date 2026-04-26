@@ -21,7 +21,7 @@ public class CreateHostelCommandHandler : IRequestHandler<CreateHostelCommand, G
         var hostel = new Hostel
         {
             Name = request.Name,
-            Address = request.Address,
+            Street = request.Address,
             Capacity = request.Capacity
         };
 

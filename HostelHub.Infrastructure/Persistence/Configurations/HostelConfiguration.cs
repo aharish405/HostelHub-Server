@@ -14,9 +14,23 @@ public class HostelConfiguration : IEntityTypeConfiguration<Hostel>
             .IsRequired()
             .HasMaxLength(150);
             
-        builder.Property(h => h.Address)
+        builder.Property(h => h.Street)
             .IsRequired()
-            .HasMaxLength(300);
+            .HasMaxLength(200);
+
+        builder.Property(h => h.City)
+            .IsRequired()
+            .HasMaxLength(100);
+
+        builder.Property(h => h.GSTIN)
+            .IsRequired()
+            .HasMaxLength(20);
+
+        builder.Property(h => h.Amenities)
+            .HasConversion(
+                v => string.Join(',', v),
+                v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList()
+            );
             
         builder.Property(h => h.TenantId)
             .IsRequired()

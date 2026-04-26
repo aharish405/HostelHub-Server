@@ -29,9 +29,9 @@ public class BookingConcurrencyTests(IntegrationTestFactory factory) : BaseInteg
         await roleManager.CreateAsync(new IdentityRole(Roles.HostelAdmin));
         
         var tenantId = "tenant-race";
-        var hostel = new Hostel { Name = "Race Hostel", Address = "Race 1", TenantId = tenantId };
-        var room = new Room { Hostel = hostel, RoomNumber = "R1", RoomType = RoomType.Dormitory, TenantId = tenantId };
-        var bed = new Bed { Room = room, BedNumber = "B1", Status = BedStatus.Available, PricePerNight = 10, TenantId = tenantId };
+        var hostel = new Hostel { Name = "Race Hostel", Street = "Race 1", TenantId = tenantId };
+        var room = new Room { Hostel = hostel, RoomNumber = "R1", RoomType = RoomType.MixedDorm, TenantId = tenantId };
+        var bed = new Bed { Room = room, BedName = "B1", Status = BedStatus.Available, PricePerNight = 10, TenantId = tenantId };
         context.Hostels.Add(hostel);
         await context.SaveChangesAsync();
 
@@ -48,7 +48,8 @@ public class BookingConcurrencyTests(IntegrationTestFactory factory) : BaseInteg
             bed.Id, 
             DateTime.Today.AddDays(5), 
             DateTime.Today.AddDays(7), 
-            Guid.NewGuid());
+            "Race Guest",
+            "guest@test.com");
 
         for (int i = 0; i < 10; i++)
         {

@@ -10,9 +10,13 @@ public class BedConfiguration : IEntityTypeConfiguration<Bed>
     {
         builder.HasKey(b => b.Id);
 
-        builder.Property(b => b.BedNumber)
+        builder.Property(b => b.BedName)
             .IsRequired()
             .HasMaxLength(50);
+
+        builder.Property(b => b.BedType)
+            .IsRequired()
+            .HasConversion<string>();
             
         builder.Property(b => b.Status)
             .IsRequired()
